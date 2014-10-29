@@ -10,6 +10,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.support.PageFactory;
+import page.objects.SearchBoxPageObject;
 import steps.NavigationSteps;
 
 import java.util.List;
@@ -22,22 +24,25 @@ import static org.junit.Assert.fail;
 @ReportTo(server = "http://127.0.0.1:8080", userName = "JohnDoe")
 public class SampleAutomationTest {
     private WebDriver webDriver;
+    private NavigationSteps navigationSteps;
+
 
     @Before
     public void setUp() {
         //Please change false to true during dojo
         webDriver = new HtmlUnitDriver(false);
-        new NavigationSteps(webDriver);
+        navigationSteps = new NavigationSteps(webDriver);
     }
 
     @Test
     @Scenario(1)
     public void searchForItem() {
+        SearchBoxPageObject searchBoxPage = PageFactory.initElements(webDriver, SearchBoxPageObject.class);
         //Given open google.com
-        openGooglePage();
+        navigationSteps.openPage("http://google.com");
 
         // When I search by "automated testing dojo"
-        searchBy("automated testing dojo idea");
+        searchBoxPage.searchBy("automated testing dojo idea");
 
         //Then I see a link to Sergey's blog
         assertContainsLink("szelenin.blogspot.com");
@@ -46,9 +51,12 @@ public class SampleAutomationTest {
     @Test
     @Scenario(1)
     public void shouldBeAbleToClick() {
-        //Given google.com page with search results by "automated testing dojo"
-        openGooglePage();
-        searchBy("automated testing dojo idea");
+        SearchBoxPageObject searchBoxPage = PageFactory.initElements(webDriver, SearchBoxPageObject.class);
+        //Given open google.com
+        navigationSteps.openPage("http://google.com");
+
+        // When I search by "automated testing dojo"
+        searchBoxPage.searchBy("automated testing dojo idea");
 
         // When I click on link for Sergey's blog
         clickOn("szelenin.blogspot.com");
@@ -76,9 +84,5 @@ public class SampleAutomationTest {
         return webDriver.findElements(By.xpath("//a[contains(@href, '" + address + "')]"));
     }
 
-    private void searchBy(String text) {
-        WebElement searchText = webDriver.findElement(By.name("q"));
-        searchText.sendKeys(text);
-        searchText.submit();
-    }
+
 }
