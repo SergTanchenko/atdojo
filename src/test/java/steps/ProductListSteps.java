@@ -14,19 +14,15 @@ public class ProductListSteps extends AbstractSteps {
         super(webDriver);
     }
 
-
-
     //Then all items contains [keyword]
     public boolean itemsContainsKeyWord(final List<String> productList, final String keyWord) {
         List<String> result = new ArrayList<String>();
 
         for(String product : productList) {
-            if (!product.equalsIgnoreCase(keyWord.toLowerCase())) {
+            if (!product.contains(keyWord)) {
                 result.add(product);
             }
         }
         return result.size() == 0;
     }
-
-
 }

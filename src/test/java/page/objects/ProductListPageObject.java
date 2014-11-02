@@ -27,14 +27,22 @@ public class ProductListPageObject extends AbstractPage {
         return productListTable.isDisplayed();
     }
 
-    public List<String> lookupProductList(){
-        List result = new ArrayList();
-        if (!productListTable.isDisplayed()){
-            return null;
-        }
+    public List<String> lookupProductListName(){
+        List<String> result = new ArrayList<String>();
 
         for (WebElement rowElem : productListTable.findElements(By.xpath("//tr[contains(@id,'productId_')]"))) {
-            result.add(rowElem.getText());
+            WebElement tdElem = rowElem.findElement(By.id("element_description"));
+            result.add(tdElem.getText());
+        }
+        return result;
+    }
+
+    public List<String> lookupProductListPrice(){
+        List<String> result = new ArrayList<String>();
+
+        for (WebElement rowElem : productListTable.findElements(By.xpath("//tr[contains(@id,'productId_')]"))) {
+            WebElement tdElem = rowElem.findElement(By.id("element_price"));
+            result.add(tdElem.getText());
         }
         return result;
     }
